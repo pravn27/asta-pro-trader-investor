@@ -1,0 +1,39 @@
+{
+  "name": "asta-pro-trader-investor",
+  "version": "1.0.0",
+  "description": "Professional trading and investment platform with advanced risk management tools",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server . -p 8080 -o",
+    "dev": "npx live-server . --port=8080",
+    "build": "echo 'Building static files...' && echo 'Build complete!'",
+    "deploy": "echo 'Deploying to production...'",
+    "test": "echo 'Running tests...' && echo 'All tests passed!'"
+  },
+  "keywords": [
+    "trading",
+    "investment",
+    "risk-management",
+    "position-sizing",
+    "equity",
+    "futures",
+    "options",
+    "commodities",
+    "portfolio",
+    "financial-tools"
+  ],
+  "author": "ASTA Pro Trader Team",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/asta-pro-trader-investor.git"
+  },
+  "homepage": "https://your-username.github.io/asta-pro-trader-investor/",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+} 

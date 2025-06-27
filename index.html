@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASTA Pro Trader & Investor - Professional Trading Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"
+      defer
+    ></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link href="styles.css" rel="stylesheet" />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "trading-dark": "#0F172A",
+              "trading-card": "#1E293B",
+              "trading-accent": "#3B82F6",
+              "trading-success": "#10B981",
+              "trading-danger": "#EF4444",
+              "trading-warning": "#F59E0B",
+              "trading-purple": "#8B5CF6",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-gray-50 text-gray-900" x-data="tradingApp()">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 flex items-center">
+              <i
+                class="fas fa-chart-line text-2xl text-trading-accent mr-3"
+              ></i>
+              <span class="text-xl font-bold text-gray-900"
+                >ASTA Pro Trader</span
+              >
+            </div>
+          </div>
+          <div class="hidden md:flex items-center space-x-4">
+            <button
+              @click="activeTab = 'dashboard'"
+              :class="activeTab === 'dashboard' ? 'nav-button active' : 'nav-button text-gray-600'"
+              class="text-sm font-medium"
+            >
+              <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+            </button>
+            <button
+              @click="activeTab = 'equity'"
+              :class="activeTab === 'equity' ? 'nav-button active' : 'nav-button text-gray-600'"
+              class="text-sm font-medium"
+            >
+              <i class="fas fa-chart-bar mr-2"></i>Equity
+            </button>
+            <button
+              @click="activeTab = 'futures'"
+              :class="activeTab === 'futures' ? 'nav-button active' : 'nav-button text-gray-600'"
+              class="text-sm font-medium"
+            >
+              <i class="fas fa-coins mr-2"></i>F&O
+            </button>
+            <button
+              @click="activeTab = 'commodities'"
+              :class="activeTab === 'commodities' ? 'nav-button active' : 'nav-button text-gray-600'"
+              class="text-sm font-medium"
+            >
+              <i class="fas fa-seedling mr-2"></i>Commodities
+            </button>
+          </div>
+          <div class="flex items-center space-x-2">
+            <!-- Mobile Menu Button -->
+            <button
+              @click="mobileMenuOpen = !mobileMenuOpen"
+              class="md:hidden text-gray-600 hover:text-trading-accent ml-2"
+            >
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Mobile Menu -->
+      <div
+        x-show="mobileMenuOpen"
+        x-transition
+        class="md:hidden bg-white border-t shadow-lg"
+      >
+        <div class="px-4 py-4 space-y-3">
+          <button
+            @click="activeTab = 'dashboard'; mobileMenuOpen = false"
+            :class="activeTab === 'dashboard' ? 'nav-button active w-full' : 'nav-button text-gray-600 w-full'"
+            class="text-left text-sm font-medium"
+          >
+            <i class="fas fa-tachometer-alt mr-3"></i>Dashboard
+          </button>
+          <button
+            @click="activeTab = 'equity'; mobileMenuOpen = false"
+            :class="activeTab === 'equity' ? 'nav-button active w-full' : 'nav-button text-gray-600 w-full'"
+            class="text-left text-sm font-medium"
+          >
+            <i class="fas fa-chart-bar mr-3"></i>Equity Calculator
+          </button>
+          <button
+            @click="activeTab = 'futures'; mobileMenuOpen = false"
+            :class="activeTab === 'futures' ? 'nav-button active w-full' : 'nav-button text-gray-600 w-full'"
+            class="text-left text-sm font-medium"
+          >
+            <i class="fas fa-coins mr-3"></i>F&O Calculator
+          </button>
+          <button
+            @click="activeTab = 'commodities'; mobileMenuOpen = false"
+            :class="activeTab === 'commodities' ? 'nav-button active w-full' : 'nav-button text-gray-600 w-full'"
+            class="text-left text-sm font-medium"
+          >
+            <i class="fas fa-seedling mr-3"></i>Commodities Guide
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Dashboard Tab -->
+      <div x-show="activeTab === 'dashboard'" class="animate-fade-in">
+        <div class="mb-8">
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">
+            Professional Trading Dashboard
+          </h1>
+          <p class="text-gray-600">
+            Advanced risk management and position sizing tools for professional
+            traders and investors
+          </p>
+        </div>
+
+        <!-- Quick Access -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div
+            class="bg-white rounded-xl p-8 card-shadow quick-access-card"
+            @click="activeTab = 'equity'"
+          >
+            <div class="text-center">
+              <div
+                class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-6"
+              >
+                <i class="fas fa-chart-bar text-2xl text-green-600"></i>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 mb-3">
+                Equity Calculator
+              </h3>
+              <p class="text-gray-600 leading-relaxed">
+                Calculate position sizes and risk management for equity trading
+                with professional tools
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="bg-white rounded-xl p-8 card-shadow quick-access-card"
+            @click="activeTab = 'futures'"
+          >
+            <div class="text-center">
+              <div
+                class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-6"
+              >
+                <i class="fas fa-coins text-2xl text-blue-600"></i>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 mb-3">
+                F&O Calculator
+              </h3>
+              <p class="text-gray-600 leading-relaxed">
+                Advanced futures and options position sizing with lot-based
+                calculations
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="bg-white rounded-xl p-8 card-shadow quick-access-card"
+            @click="activeTab = 'commodities'"
+          >
+            <div class="text-center">
+              <div
+                class="inline-flex items-center justify-center w-16 h-16 bg-yellow-100 rounded-full mb-6"
+              >
+                <i class="fas fa-seedling text-2xl text-yellow-600"></i>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 mb-3">
+                Commodities Guide
+              </h3>
+              <p class="text-gray-600 leading-relaxed">
+                Comprehensive guide to commodity trading markets and strategies
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Equity Tab - Excel Style Layout -->
+      <div x-show="activeTab === 'equity'" class="animate-fade-in space-y-8">
+        <div class="section-header">
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">
+            Risk & Reward Calculator
+          </h1>
+          <p class="text-gray-600">
+            Professional equity position sizing and risk management
+          </p>
+        </div>
+
+        <!-- Section 1: Capital and Risk Setup -->
+        <div class="simple-section">
+          <div class="section-header-simple">
+            <h2 class="section-title-simple">
+              1. Capital & Risk Configuration
+            </h2>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
+            <div class="lg:col-span-2">
+              <label class="form-label">Trading Capital</label>
+              <input
+                type="number"
+                x-model="equity.capital"
+                class="user-input w-full text-center"
+                placeholder="200000"
+              />
+            </div>
+            <div class="lg:col-span-3">
+              <label class="form-label">Max Risk per Trade (%)</label>
+              <div class="flex items-center space-x-2">
+                <input
+                  type="number"
+                  x-model="equity.maxRisk"
+                  step="0.1"
+                  class="user-input w-full text-center"
+                  placeholder="2"
+                />
+                <span class="text-gray-500 font-medium">%</span>
+              </div>
+            </div>
+            <div class="lg:col-span-3">
+              <label class="form-label">Maximum Risk Amount</label>
+              <div
+                class="form-input bg-gray-50 font-bold text-center text-gray-900"
+                x-text="'₹' + formatNumber((equity.capital * equity.maxRisk) / 100)"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Risk Conviction Levels -->
+          <div class="mt-6">
+            <div class="section-header-simple">
+              <h3 class="section-title-simple">2. Risk Conviction Levels</h3>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="simple-table">
+                <thead>
+                  <tr>
+                    <th>Below Low</th>
+                    <th>Low</th>
+                    <th>Medium</th>
+                    <th>High</th>
+                    <th>Above High</th>
+                    <th class="text-gray-600">Buffer</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="font-semibold text-blue-600">0.25%</td>
+                    <td class="font-semibold text-blue-600">0.50%</td>
+                    <td class="font-semibold text-blue-600">1.00%</td>
+                    <td class="font-semibold text-blue-600">1.50%</td>
+                    <td class="font-semibold text-blue-600">1.75%</td>
+                    <td class="font-semibold text-orange-600">2.00%</td>
+                  </tr>
+                  <tr>
+                    <td
+                      class="font-bold text-gray-900"
+                      x-text="'₹' + formatNumber((equity.capital * 0.25) / 100)"
+                    ></td>
+                    <td
+                      class="font-bold text-gray-900"
+                      x-text="'₹' + formatNumber((equity.capital * 0.5) / 100)"
+                    ></td>
+                    <td
+                      class="font-bold text-gray-900"
+                      x-text="'₹' + formatNumber((equity.capital * 1) / 100)"
+                    ></td>
+                    <td
+                      class="font-bold text-gray-900"
+                      x-text="'₹' + formatNumber((equity.capital * 1.5) / 100)"
+                    ></td>
+                    <td
+                      class="font-bold text-gray-900"
+                      x-text="'₹' + formatNumber((equity.capital * 1.75) / 100)"
+                    ></td>
+                    <td
+                      class="font-bold text-gray-900"
+                      x-text="'₹' + formatNumber((equity.capital * 2) / 100)"
+                    ></td>
+                  </tr>
+                  <tr>
+                    <td
+                      colspan="6"
+                      class="text-xs text-gray-500 text-center pt-2 italic"
+                    >
+                      0.25% buffer included for risk management
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Position Analysis -->
+        <div class="simple-section">
+          <div class="section-header-simple">
+            <h3 class="section-title-simple">3. Position Analysis</h3>
+          </div>
+
+          <!-- Position Tabs -->
+          <div class="mb-6" x-data="{ activePositionTab: 'buy' }">
+            <div class="border-b border-gray-200 mb-6">
+              <nav class="flex space-x-8">
+                <button
+                  @click="activePositionTab = 'buy'"
+                  :class="activePositionTab === 'buy' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
+                  class="py-2 px-1 border-b-2 font-medium text-sm"
+                >
+                  Buy / Long
+                </button>
+                <button
+                  @click="activePositionTab = 'sell'"
+                  :class="activePositionTab === 'sell' ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
+                  class="py-2 px-1 border-b-2 font-medium text-sm"
+                >
+                  Sell / Short
+                </button>
+              </nav>
+            </div>
+
+            <!-- Buy/Long Tab Content -->
+            <div x-show="activePositionTab === 'buy'" class="animate-fade-in">
+              <!-- Position Calculator -->
+              <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+                <h4
+                  class="text-lg font-semibold text-blue-600 mb-4 border-b border-gray-100 pb-2"
+                >
+                  📈 Buy / Long Position Calculator
+                </h4>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <!-- Input Section -->
+                  <div>
+                    <h5 class="font-medium text-gray-700 mb-3">
+                      Position Details per Share / Qty
+                    </h5>
+                    <div class="space-y-3">
+                      <div class="flex items-center justify-between">
+                        <label class="text-sm font-bold text-gray-700 w-20"
+                          >Entry</label
+                        >
+                        <input
+                          type="number"
+                          x-model="equity.buyEntry"
+                          step="0.01"
+                          class="user-input w-32 text-center"
+                          placeholder="3950"
+                        />
+                      </div>
+                      <div class="flex items-center justify-between">
+                        <label class="text-sm font-bold text-gray-700 w-20"
+                          >Stop Loss</label
+                        >
+                        <input
+                          type="number"
+                          x-model="equity.buyStopLoss"
+                          step="0.01"
+                          class="user-input w-32 text-center"
+                          placeholder="3850"
+                        />
+                      </div>
+                      <div
+                        class="flex items-center justify-between pt-2 border-t border-gray-100"
+                      >
+                        <label class="text-sm font-bold text-gray-700 w-20"
+                          >Risk</label
+                        >
+                        <div
+                          class="w-32 text-center font-bold text-gray-900 py-2 px-3 bg-gray-50 rounded"
+                          x-text="Math.abs((equity.buyEntry || 0) - (equity.buyStopLoss || 0))"
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Results Section -->
+                  <div>
+                    <h5 class="font-medium text-gray-700 mb-3">Results</h5>
+                    <div class="space-y-2">
+                      <div
+                        class="flex justify-between py-2 border-b border-gray-100"
+                      >
+                        <span class="text-sm text-gray-600"
+                          >Max number of shares allowed to buy based on
+                          RISK</span
+                        >
+                        <span
+                          class="font-semibold"
+                          x-text="calculateEquityBuyRisk().maxSharesRisk"
+                        ></span>
+                      </div>
+
+                      <div
+                        class="flex justify-between py-2 border-b border-gray-100"
+                      >
+                        <span class="text-sm text-gray-600"
+                          >Max number of shares allowed to buy based on
+                          ENTRY</span
+                        >
+                        <span
+                          class="font-semibold"
+                          x-text="calculateEquityBuyRisk().maxSharesEntry"
+                        ></span>
+                      </div>
+
+                      <div
+                        class="flex justify-between py-2 border-b border-gray-100"
+                      >
+                        <span class="text-sm text-gray-600">Recommended</span>
+                        <span
+                          class="font-semibold text-blue-600"
+                          x-text="calculateEquityBuyRisk().recommendedLevel"
+                        ></span>
+                      </div>
+
+                      <div
+                        class="flex justify-between py-3 bg-blue-50 px-3 rounded mt-3"
+                      >
+                        <span class="font-medium text-blue-800"
+                          >Final Max Shares</span
+                        >
+                        <span
+                          class="font-bold text-lg text-blue-900"
+                          x-text="calculateEquityBuyRisk().finalMaxShares"
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Risk Ranges Table -->
+                <div
+                  class="bg-white border border-gray-200 rounded-lg p-6 mt-6"
+                >
+                  <h4
+                    class="text-lg font-semibold text-blue-600 mb-4 border-b border-gray-100 pb-2"
+                  >
+                    📊 Buy/Long Risk Analysis
+                  </h4>
+                  <div class="overflow-x-auto">
+                    <table class="simple-table">
+                      <thead>
+                        <tr>
+                          <th>Risk Level</th>
+                          <th>0.25%</th>
+                          <th>0.50%</th>
+                          <th>1.00%</th>
+                          <th>1.50%</th>
+                          <th>1.75%</th>
+                          <th>2.00%</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="font-semibold text-gray-700">Shares</td>
+                          <template
+                            x-for="range in getBuyRiskRanges()"
+                            :key="range.percentage"
+                          >
+                            <td
+                              class="font-bold text-blue-600"
+                              x-text="range.shares"
+                            ></td>
+                          </template>
+                        </tr>
+                        <tr>
+                          <td class="font-semibold text-gray-700">
+                            Investment
+                          </td>
+                          <template
+                            x-for="range in getBuyRiskRanges()"
+                            :key="range.percentage + '_amount'"
+                          >
+                            <td
+                              class="font-semibold text-gray-900"
+                              x-text="'₹' + formatNumber(range.amount)"
+                            ></td>
+                          </template>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sell/Short Tab Content -->
+            <div x-show="activePositionTab === 'sell'" class="animate-fade-in">
+              <!-- Position Calculator -->
+              <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+                <h4
+                  class="text-lg font-semibold text-red-600 mb-4 border-b border-gray-100 pb-2"
+                >
+                  📉 Sell / Short Position Calculator
+                </h4>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <!-- Input Section -->
+                  <div>
+                    <h5 class="font-medium text-gray-700 mb-3">
+                      Position Details per Share / Qty
+                    </h5>
+                    <div class="space-y-3">
+                      <div class="flex items-center justify-between">
+                        <label class="text-sm font-bold text-gray-700 w-20"
+                          >Entry</label
+                        >
+                        <input
+                          type="number"
+                          x-model="equity.sellEntry"
+                          step="0.01"
+                          class="user-input w-32 text-center"
+                          placeholder="1500"
+                        />
+                      </div>
+                      <div class="flex items-center justify-between">
+                        <label class="text-sm font-bold text-gray-700 w-20"
+                          >Stop Loss</label
+                        >
+                        <input
+                          type="number"
+                          x-model="equity.sellStopLoss"
+                          step="0.01"
+                          class="user-input w-32 text-center"
+                          placeholder="1620"
+                        />
+                      </div>
+                      <div
+                        class="flex items-center justify-between pt-2 border-t border-gray-100"
+                      >
+                        <label class="text-sm font-bold text-gray-700 w-20"
+                          >Risk</label
+                        >
+                        <div
+                          class="w-32 text-center font-bold text-gray-900 py-2 px-3 bg-gray-50 rounded"
+                          x-text="Math.abs((equity.sellEntry || 0) - (equity.sellStopLoss || 0))"
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Results Section -->
+                  <div>
+                    <h5 class="font-medium text-gray-700 mb-3">Results</h5>
+                    <div class="space-y-2">
+                      <div
+                        class="flex justify-between py-2 border-b border-gray-100"
+                      >
+                        <span class="text-sm text-gray-600"
+                          >Max number of shares allowed to buy based on
+                          RISK</span
+                        >
+                        <span
+                          class="font-semibold"
+                          x-text="calculateEquitySellRisk().maxSharesRisk"
+                        ></span>
+                      </div>
+
+                      <div
+                        class="flex justify-between py-2 border-b border-gray-100"
+                      >
+                        <span class="text-sm text-gray-600"
+                          >Max number of shares allowed to buy based on
+                          ENTRY</span
+                        >
+                        <span
+                          class="font-semibold"
+                          x-text="calculateEquitySellRisk().maxSharesEntry"
+                        ></span>
+                      </div>
+
+                      <div
+                        class="flex justify-between py-2 border-b border-gray-100"
+                      >
+                        <span class="text-sm text-gray-600">Recommended</span>
+                        <span
+                          class="font-semibold text-red-600"
+                          x-text="calculateEquitySellRisk().recommendedLevel"
+                        ></span>
+                      </div>
+
+                      <div
+                        class="flex justify-between py-3 bg-red-50 px-3 rounded mt-3"
+                      >
+                        <span class="font-medium text-red-800"
+                          >Final Max Shares</span
+                        >
+                        <span
+                          class="font-bold text-lg text-red-900"
+                          x-text="calculateEquitySellRisk().finalMaxShares"
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Risk Ranges Table -->
+                <div
+                  class="bg-white border border-gray-200 rounded-lg p-6 mt-6"
+                >
+                  <h4
+                    class="text-lg font-semibold text-red-600 mb-4 border-b border-gray-100 pb-2"
+                  >
+                    📊 Sell/Short Risk Analysis
+                  </h4>
+                  <div class="overflow-x-auto">
+                    <table class="simple-table">
+                      <thead>
+                        <tr>
+                          <th>Risk Level</th>
+                          <th>0.25%</th>
+                          <th>0.50%</th>
+                          <th>1.00%</th>
+                          <th>1.50%</th>
+                          <th>1.75%</th>
+                          <th>2.00%</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="font-semibold text-gray-700">Shares</td>
+                          <template
+                            x-for="range in getSellRiskRanges()"
+                            :key="range.percentage"
+                          >
+                            <td
+                              class="font-bold text-red-600"
+                              x-text="range.shares"
+                            ></td>
+                          </template>
+                        </tr>
+                        <tr>
+                          <td class="font-semibold text-gray-700">
+                            Investment
+                          </td>
+                          <template
+                            x-for="range in getSellRiskRanges()"
+                            :key="range.percentage + '_amount'"
+                          >
+                            <td
+                              class="font-semibold text-gray-900"
+                              x-text="'₹' + formatNumber(range.amount)"
+                            ></td>
+                          </template>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Futures Tab -->
+      <div x-show="activeTab === 'futures'" class="animate-fade-in space-y-6">
+        <div class="bg-white rounded-xl card-shadow p-6 border border-gray-300">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+            <i class="fas fa-chart-line mr-3 text-blue-600"></i>
+            Futures & Options Risk Calculator
+          </h2>
+
+          <!-- F&O Capital Section -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Capital Input -->
+            <div class="lg:col-span-1">
+              <div class="border border-gray-300 rounded-lg p-4 bg-gray-50">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                  F&O Capital
+                </h3>
+                <div class="space-y-3">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Total F&O Capital</label
+                    >
+                    <input
+                      type="number"
+                      x-model="foCapital"
+                      @input="calculateFORisk()"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="300000"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Max Risk per Trade (%)</label
+                    >
+                    <input
+                      type="number"
+                      x-model="foMaxRiskPercent"
+                      @input="calculateFORisk()"
+                      step="0.1"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="2.5"
+                    />
+                  </div>
+                  <div class="text-lg font-bold text-gray-900">
+                    Max Risk Amount: ₹<span
+                      x-text="foMaxRiskAmount.toLocaleString()"
+                    ></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- F&O Probability Table -->
+            <div class="lg:col-span-2">
+              <div class="border border-gray-300 rounded-lg p-4 bg-gray-50">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                  F&O Risk Levels
+                </h3>
+                <div class="overflow-x-auto">
+                  <table class="w-full border border-gray-300">
+                    <thead>
+                      <tr class="bg-gray-100">
+                        <th
+                          class="px-4 py-2 text-left font-semibold text-gray-900 border border-gray-300"
+                        >
+                          Strategy Type
+                        </th>
+                        <th
+                          class="px-4 py-2 text-left font-semibold text-gray-900 border border-gray-300"
+                        >
+                          Risk %
+                        </th>
+                        <th
+                          class="px-4 py-2 text-left font-semibold text-gray-900 border border-gray-300"
+                        >
+                          Risk Amount
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td
+                          class="px-4 py-2 border border-gray-300 text-gray-900"
+                        >
+                          Conservative Hedge
+                        </td>
+                        <td
+                          class="px-4 py-2 border border-gray-300 text-gray-900"
+                        >
+                          0.5%
+                        </td>
+                        <td
+                          class="px-4 py-2 border border-gray-300 text-gray-900"
+                        >
+                          ₹<span
+                            x-text="(foCapital * 0.005).toLocaleString()"
+                          ></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td
+                          class="px-4 py-2 border border-gray-300 text-gray-900"
+                        >
+                          Low Risk
+                        </td>
+                        <td
+                          class="px-4 py-2 border border-gray-300 text-gray-900"
+                        >
+                          1%
+                        </td>
+                        <td
+                          class="px-4 py-2 border border-gray-300 text-gray-900"
+                        >
+                          ₹<span
+                            x-text="(foCapital * 0.01).toLocaleString()"
+                          ></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td
+                          class="px-4 py-2 border border-gray-300 text-gray-900"
+                        >
+                          Medium Risk
+                        </td>
+                        <td
+                          class="px-4 py-2 border border-gray-300 text-gray-900"
+                        >
+                          2%
+                        </td>
+                        <td
+                          class="px-4 py-2 border border-gray-300 text-gray-900"
+                        >
+                          ₹<span
+                            x-text="(foCapital * 0.02).toLocaleString()"
+                          ></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td
+                          class="px-4 py-2 border border-gray-300 text-gray-900"
+                        >
+                          High Risk
+                        </td>
+                        <td
+                          class="px-4 py-2 border border-gray-300 text-gray-900"
+                        >
+                          2.5%
+                        </td>
+                        <td
+                          class="px-4 py-2 border border-gray-300 text-gray-900"
+                        >
+                          ₹<span
+                            x-text="(foCapital * 0.025).toLocaleString()"
+                          ></span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td
+                          class="px-4 py-2 border border-gray-300 text-gray-900"
+                        >
+                          Aggressive
+                        </td>
+                        <td
+                          class="px-4 py-2 border border-gray-300 text-gray-900"
+                        >
+                          3%
+                        </td>
+                        <td
+                          class="px-4 py-2 border border-gray-300 text-gray-900"
+                        >
+                          ₹<span
+                            x-text="(foCapital * 0.03).toLocaleString()"
+                          ></span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Futures Calculator -->
+          <div class="mb-8">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">
+              Futures Position Calculator
+            </h3>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <!-- Long Position -->
+              <div class="border border-gray-300 rounded-lg p-4">
+                <h4
+                  class="text-lg font-semibold text-gray-900 mb-4 text-green-600"
+                >
+                  Long Position
+                </h4>
+                <div class="space-y-3">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Entry Price</label
+                    >
+                    <input
+                      type="number"
+                      x-model="futuresLongEntry"
+                      @input="calculateFORisk()"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-green-100"
+                      placeholder="19500"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Stop Loss</label
+                    >
+                    <input
+                      type="number"
+                      x-model="futuresLongStop"
+                      @input="calculateFORisk()"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-green-100"
+                      placeholder="19300"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Lot Size</label
+                    >
+                    <input
+                      type="number"
+                      x-model="futuresLotSize"
+                      @input="calculateFORisk()"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                      placeholder="50"
+                    />
+                  </div>
+                  <div class="bg-gray-100 p-3 rounded">
+                    <div class="text-sm text-gray-700">
+                      Risk per Lot: ₹<span
+                        x-text="futuresLongRisk.toLocaleString()"
+                      ></span>
+                    </div>
+                    <div class="text-sm text-gray-700">
+                      Max Lots (2.5%): <span x-text="futuresLongMaxLots"></span>
+                    </div>
+                    <div class="text-lg font-bold text-gray-900">
+                      Total Risk: ₹<span
+                        x-text="futuresLongTotalRisk.toLocaleString()"
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Short Position -->
+              <div class="border border-gray-300 rounded-lg p-4">
+                <h4
+                  class="text-lg font-semibold text-gray-900 mb-4 text-red-600"
+                >
+                  Short Position
+                </h4>
+                <div class="space-y-3">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Entry Price</label
+                    >
+                    <input
+                      type="number"
+                      x-model="futuresShortEntry"
+                      @input="calculateFORisk()"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-green-100"
+                      placeholder="19500"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Stop Loss</label
+                    >
+                    <input
+                      type="number"
+                      x-model="futuresShortStop"
+                      @input="calculateFORisk()"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-green-100"
+                      placeholder="19700"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Lot Size</label
+                    >
+                    <input
+                      type="number"
+                      x-model="futuresLotSize"
+                      @input="calculateFORisk()"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                      placeholder="50"
+                    />
+                  </div>
+                  <div class="bg-gray-100 p-3 rounded">
+                    <div class="text-sm text-gray-700">
+                      Risk per Lot: ₹<span
+                        x-text="futuresShortRisk.toLocaleString()"
+                      ></span>
+                    </div>
+                    <div class="text-sm text-gray-700">
+                      Max Lots (2.5%):
+                      <span x-text="futuresShortMaxLots"></span>
+                    </div>
+                    <div class="text-lg font-bold text-gray-900">
+                      Total Risk: ₹<span
+                        x-text="futuresShortTotalRisk.toLocaleString()"
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Options Calculator -->
+          <div>
+            <h3 class="text-xl font-bold text-gray-900 mb-4">
+              Options Strategy Calculator
+            </h3>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <!-- Buy Options -->
+              <div class="border border-gray-300 rounded-lg p-4">
+                <h4
+                  class="text-lg font-semibold text-gray-900 mb-4 text-blue-600"
+                >
+                  Buy Options (Long)
+                </h4>
+                <div class="space-y-3">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Premium Price</label
+                    >
+                    <input
+                      type="number"
+                      x-model="optionsBuyPremium"
+                      @input="calculateFORisk()"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-green-100"
+                      placeholder="150"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Lot Size</label
+                    >
+                    <input
+                      type="number"
+                      x-model="optionsLotSize"
+                      @input="calculateFORisk()"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                      placeholder="50"
+                    />
+                  </div>
+                  <div class="bg-gray-100 p-3 rounded">
+                    <div class="text-sm text-gray-700">
+                      Risk per Lot: ₹<span
+                        x-text="optionsBuyRisk.toLocaleString()"
+                      ></span>
+                    </div>
+                    <div class="text-sm text-gray-700">
+                      Max Lots (2.5%): <span x-text="optionsBuyMaxLots"></span>
+                    </div>
+                    <div class="text-lg font-bold text-gray-900">
+                      Total Investment: ₹<span
+                        x-text="optionsBuyTotalRisk.toLocaleString()"
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sell Options -->
+              <div class="border border-gray-300 rounded-lg p-4">
+                <h4
+                  class="text-lg font-semibold text-gray-900 mb-4 text-purple-600"
+                >
+                  Sell Options (Short)
+                </h4>
+                <div class="space-y-3">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Premium Received</label
+                    >
+                    <input
+                      type="number"
+                      x-model="optionsSellPremium"
+                      @input="calculateFORisk()"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-green-100"
+                      placeholder="150"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Maximum Loss (Expected)</label
+                    >
+                    <input
+                      type="number"
+                      x-model="optionsSellMaxLoss"
+                      @input="calculateFORisk()"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-green-100"
+                      placeholder="300"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Lot Size</label
+                    >
+                    <input
+                      type="number"
+                      x-model="optionsLotSize"
+                      @input="calculateFORisk()"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                      placeholder="50"
+                    />
+                  </div>
+                  <div class="bg-gray-100 p-3 rounded">
+                    <div class="text-sm text-gray-700">
+                      Net Risk per Lot: ₹<span
+                        x-text="optionsSellRisk.toLocaleString()"
+                      ></span>
+                    </div>
+                    <div class="text-sm text-gray-700">
+                      Max Lots (2.5%): <span x-text="optionsSellMaxLots"></span>
+                    </div>
+                    <div class="text-lg font-bold text-gray-900">
+                      Total Risk: ₹<span
+                        x-text="optionsSellTotalRisk.toLocaleString()"
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Commodities Tab -->
+      <div
+        x-show="activeTab === 'commodities'"
+        class="animate-fade-in space-y-6"
+      >
+        <div class="bg-white rounded-xl card-shadow p-6 border border-gray-300">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+            <i class="fas fa-seedling mr-3 text-green-600"></i>
+            About Commodities Trading
+          </h2>
+
+          <!-- Introduction -->
+          <div class="mb-8">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">
+              What are Commodities?
+            </h3>
+            <p class="text-gray-600 mb-4">
+              Commodities are raw materials or primary agricultural products
+              that can be bought and sold. They are the building blocks of the
+              global economy and include precious metals, energy products,
+              agricultural products, and industrial metals.
+            </p>
+          </div>
+
+          <!-- Commodity Categories -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Agricultural Commodities -->
+            <div class="border border-gray-300 rounded-lg p-6">
+              <h4
+                class="text-lg font-semibold text-gray-900 mb-4 text-green-600"
+              >
+                <i class="fas fa-wheat-awn mr-2"></i>Agricultural Commodities
+              </h4>
+              <ul class="space-y-2 text-gray-600">
+                <li><strong>Grains:</strong> Wheat, Rice, Corn, Barley</li>
+                <li><strong>Pulses:</strong> Chana, Turmeric, Coriander</li>
+                <li><strong>Cash Crops:</strong> Cotton, Sugar, Coffee</li>
+                <li><strong>Spices:</strong> Cardamom, Pepper, Jeera</li>
+              </ul>
+            </div>
+
+            <!-- Metals -->
+            <div class="border border-gray-300 rounded-lg p-6">
+              <h4
+                class="text-lg font-semibold text-gray-900 mb-4 text-yellow-600"
+              >
+                <i class="fas fa-coins mr-2"></i>Metals
+              </h4>
+              <ul class="space-y-2 text-gray-600">
+                <li>
+                  <strong>Precious Metals:</strong> Gold, Silver, Platinum
+                </li>
+                <li><strong>Base Metals:</strong> Copper, Aluminum, Zinc</li>
+                <li><strong>Ferrous Metals:</strong> Iron Ore, Steel</li>
+                <li><strong>Minor Metals:</strong> Nickel, Lead, Tin</li>
+              </ul>
+            </div>
+
+            <!-- Energy -->
+            <div class="border border-gray-300 rounded-lg p-6">
+              <h4 class="text-lg font-semibold text-gray-900 mb-4 text-red-600">
+                <i class="fas fa-fire mr-2"></i>Energy Commodities
+              </h4>
+              <ul class="space-y-2 text-gray-600">
+                <li><strong>Crude Oil:</strong> WTI, Brent Crude</li>
+                <li><strong>Natural Gas:</strong> Henry Hub Natural Gas</li>
+                <li>
+                  <strong>Refined Products:</strong> Gasoline, Heating Oil
+                </li>
+                <li><strong>Alternative Energy:</strong> Ethanol, Biodiesel</li>
+              </ul>
+            </div>
+
+            <!-- Livestock -->
+            <div class="border border-gray-300 rounded-lg p-6">
+              <h4
+                class="text-lg font-semibold text-gray-900 mb-4 text-blue-600"
+              >
+                <i class="fas fa-cow mr-2"></i>Livestock & Dairy
+              </h4>
+              <ul class="space-y-2 text-gray-600">
+                <li><strong>Live Animals:</strong> Cattle, Hogs</li>
+                <li>
+                  <strong>Meat Products:</strong> Lean Hogs, Feeder Cattle
+                </li>
+                <li><strong>Dairy:</strong> Milk, Butter, Cheese</li>
+                <li><strong>Poultry:</strong> Eggs, Chicken</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Trading Information -->
+          <div class="mb-8">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">
+              Commodity Trading in India
+            </h3>
+            <div class="bg-gray-50 p-6 rounded-lg">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="font-semibold text-gray-900 mb-3">
+                    Major Exchanges
+                  </h4>
+                  <ul class="space-y-1 text-gray-600">
+                    <li>• Multi Commodity Exchange (MCX)</li>
+                    <li>• National Commodity & Derivatives Exchange (NCDEX)</li>
+                    <li>• Indian Commodity Exchange (ICEX)</li>
+                    <li>• National Multi Commodity Exchange (NMCE)</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-900 mb-3">
+                    Trading Hours
+                  </h4>
+                  <ul class="space-y-1 text-gray-600">
+                    <li>• Morning Session: 9:00 AM - 5:00 PM</li>
+                    <li>• Evening Session: 5:00 PM - 11:30 PM</li>
+                    <li>• Some commodities: 24-hour trading</li>
+                    <li>• Settlement: T+1 basis</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Risk Factors -->
+          <div class="mb-8">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">
+              Key Risk Factors
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                <h4 class="font-semibold text-red-800 mb-2">Weather Risk</h4>
+                <p class="text-red-700 text-sm">
+                  Agricultural commodities are highly sensitive to weather
+                  conditions and seasonal variations.
+                </p>
+              </div>
+              <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                <h4 class="font-semibold text-yellow-800 mb-2">
+                  Political Risk
+                </h4>
+                <p class="text-yellow-700 text-sm">
+                  Government policies, trade wars, and geopolitical tensions can
+                  significantly impact prices.
+                </p>
+              </div>
+              <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <h4 class="font-semibold text-blue-800 mb-2">Currency Risk</h4>
+                <p class="text-blue-700 text-sm">
+                  Most commodities are priced in USD, making them sensitive to
+                  currency fluctuations.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trading Tips -->
+          <div>
+            <h3 class="text-xl font-bold text-gray-900 mb-4">
+              Essential Trading Tips
+            </h3>
+            <div class="bg-green-50 p-6 rounded-lg border border-green-200">
+              <ul class="space-y-3 text-green-800">
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle mt-1 mr-3 text-green-600"></i>
+                  <span
+                    ><strong>Understand Seasonality:</strong> Many commodities
+                    have seasonal price patterns based on harvest cycles and
+                    demand.</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle mt-1 mr-3 text-green-600"></i>
+                  <span
+                    ><strong>Monitor Supply & Demand:</strong> Keep track of
+                    production reports, inventory levels, and consumption
+                    trends.</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle mt-1 mr-3 text-green-600"></i>
+                  <span
+                    ><strong>Use Proper Risk Management:</strong> Commodities
+                    can be highly volatile - never risk more than 2-3% per
+                    trade.</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle mt-1 mr-3 text-green-600"></i>
+                  <span
+                    ><strong>Stay Updated:</strong> Follow weather reports,
+                    government policies, and global economic indicators.</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle mt-1 mr-3 text-green-600"></i>
+                  <span
+                    ><strong>Diversify:</strong> Don't put all capital in one
+                    commodity - spread risk across different sectors.</span
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8 mt-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <div class="flex items-center justify-center mb-4">
+            <i class="fas fa-chart-line text-2xl text-blue-400 mr-3"></i>
+            <span class="text-xl font-bold">ASTA Pro Trader & Investor</span>
+          </div>
+          <p class="text-gray-400">
+            Professional trading platform for risk management and position
+            sizing
+          </p>
+          <div class="mt-4 text-sm text-gray-500">
+            <p>&copy; 2024 ASTA Pro Trader. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
