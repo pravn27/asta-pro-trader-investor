@@ -225,16 +225,16 @@
 
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
             <div class="lg:col-span-2">
-              <label class="form-label">Trading Capital</label>
+              <label class="form-label">Capital</label>
               <input
                 type="number"
                 x-model="equity.capital"
                 class="user-input w-full text-center"
-                placeholder="200000"
+                placeholder="Enter your capital amount"
               />
             </div>
             <div class="lg:col-span-3">
-              <label class="form-label">Max Risk per Trade (%)</label>
+              <label class="form-label">Max Risk per Invest or Trade (%)</label>
               <div class="flex items-center space-x-2">
                 <input
                   type="number"
@@ -374,7 +374,7 @@
                           x-model="equity.buyEntry"
                           step="0.01"
                           class="user-input w-32 text-center"
-                          placeholder="3950"
+                          placeholder="100"
                         />
                       </div>
                       <div class="flex items-center justify-between">
@@ -386,7 +386,7 @@
                           x-model="equity.buyStopLoss"
                           step="0.01"
                           class="user-input w-32 text-center"
-                          placeholder="3850"
+                          placeholder="90"
                         />
                       </div>
                       <div

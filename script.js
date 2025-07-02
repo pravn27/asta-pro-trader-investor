@@ -9,10 +9,10 @@ function tradingApp() {
 
     // Equity calculator data - Excel style
     equity: {
-      capital: 200000,
+      capital: 100000,
       maxRisk: 2,
-      buyEntry: 3950,
-      buyStopLoss: 3850,
+      buyEntry: 100,
+      buyStopLoss: 90,
       sellEntry: 1500,
       sellStopLoss: 1620,
       convictionLevel: 1,
@@ -60,13 +60,17 @@ function tradingApp() {
         };
       }
 
-      const riskPerShare = Math.abs(entryPrice - stopLoss);
+      const riskPerShare = Math.abs(entryPrice - stopLoss).toFixed(2);
       const totalRiskAmount = (capital * maxRisk) / 100;
       const convictionRiskAmount = (capital * convictionLevel) / 100;
 
-      const maxSharesRisk = Math.floor(totalRiskAmount / riskPerShare);
+      const maxSharesRisk = Math.floor(
+        totalRiskAmount / parseFloat(riskPerShare)
+      );
       const maxSharesEntry = Math.floor(capital / entryPrice);
-      const recommendedShares = Math.floor(convictionRiskAmount / riskPerShare);
+      const recommendedShares = Math.floor(
+        convictionRiskAmount / parseFloat(riskPerShare)
+      );
 
       const investmentAmount = recommendedShares * entryPrice;
       const portfolioPercentage = ((investmentAmount / capital) * 100).toFixed(
@@ -74,7 +78,7 @@ function tradingApp() {
       );
 
       return {
-        riskPerShare: riskPerShare.toFixed(2),
+        riskPerShare: riskPerShare,
         totalRiskAmount: totalRiskAmount,
         maxSharesRisk: maxSharesRisk,
         maxSharesEntry: maxSharesEntry,
@@ -92,7 +96,7 @@ function tradingApp() {
 
       if (!capital || !entryPrice || !stopLoss) return [];
 
-      const riskPerShare = Math.abs(entryPrice - stopLoss);
+      const riskPerShare = Math.abs(entryPrice - stopLoss).toFixed(2);
       const ranges = [
         { level: "Below Low", percentage: 0.25 },
         { level: "Low", percentage: 0.5 },
@@ -103,7 +107,7 @@ function tradingApp() {
 
       return ranges.map((range) => {
         const riskAmount = (capital * range.percentage) / 100;
-        const shares = Math.floor(riskAmount / riskPerShare);
+        const shares = Math.floor(riskAmount / parseFloat(riskPerShare));
         const amount = shares * entryPrice;
 
         return {
@@ -137,8 +141,8 @@ function tradingApp() {
         };
       }
 
-      const riskPerUnit = Math.abs(entryLevel - stopLoss);
-      const riskPerLot = riskPerUnit * lotSize;
+      const riskPerUnit = Math.abs(entryLevel - stopLoss).toFixed(2);
+      const riskPerLot = parseFloat(riskPerUnit) * lotSize;
       const totalRiskAmount = (capital * maxRisk) / 100;
       const convictionRiskAmount = (capital * convictionLevel) / 100;
 
@@ -171,8 +175,8 @@ function tradingApp() {
 
       if (!capital || !entryLevel || !stopLoss || !lotSize) return [];
 
-      const riskPerUnit = Math.abs(entryLevel - stopLoss);
-      const riskPerLot = riskPerUnit * lotSize;
+      const riskPerUnit = Math.abs(entryLevel - stopLoss).toFixed(2);
+      const riskPerLot = parseFloat(riskPerUnit) * lotSize;
 
       const ranges = [
         { level: "Below Low", percentage: 0.25 },
@@ -212,10 +216,12 @@ function tradingApp() {
         };
       }
 
-      const riskPerShare = Math.abs(entryPrice - stopLoss);
+      const riskPerShare = Math.abs(entryPrice - stopLoss).toFixed(2);
       const totalRiskAmount = (capital * maxRisk) / 100;
 
-      const maxSharesRisk = Math.floor(totalRiskAmount / riskPerShare);
+      const maxSharesRisk = Math.floor(
+        totalRiskAmount / parseFloat(riskPerShare)
+      );
       const maxSharesEntry = Math.floor(capital / entryPrice);
       const recommendedLevel = Math.min(maxSharesRisk, maxSharesEntry);
       const finalMaxShares = Math.min(maxSharesRisk, maxSharesEntry);
@@ -244,10 +250,12 @@ function tradingApp() {
         };
       }
 
-      const riskPerShare = Math.abs(entryPrice - stopLoss);
+      const riskPerShare = Math.abs(entryPrice - stopLoss).toFixed(2);
       const totalRiskAmount = (capital * maxRisk) / 100;
 
-      const maxSharesRisk = Math.floor(totalRiskAmount / riskPerShare);
+      const maxSharesRisk = Math.floor(
+        totalRiskAmount / parseFloat(riskPerShare)
+      );
       const maxSharesEntry = Math.floor(capital / entryPrice);
       const recommendedLevel = Math.min(maxSharesRisk, maxSharesEntry);
       const finalMaxShares = Math.min(maxSharesRisk, maxSharesEntry);
@@ -268,12 +276,12 @@ function tradingApp() {
 
       if (!capital || !entryPrice || !stopLoss) return [];
 
-      const riskPerShare = Math.abs(entryPrice - stopLoss);
+      const riskPerShare = Math.abs(entryPrice - stopLoss).toFixed(2);
       const ranges = [0.25, 0.5, 1, 1.5, 1.75, 2];
 
       return ranges.map((percentage) => {
         const riskAmount = (capital * percentage) / 100;
-        const shares = Math.floor(riskAmount / riskPerShare);
+        const shares = Math.floor(riskAmount / parseFloat(riskPerShare));
         const amount = shares * entryPrice;
 
         return {
@@ -292,12 +300,12 @@ function tradingApp() {
 
       if (!capital || !entryPrice || !stopLoss) return [];
 
-      const riskPerShare = Math.abs(entryPrice - stopLoss);
+      const riskPerShare = Math.abs(entryPrice - stopLoss).toFixed(2);
       const ranges = [0.25, 0.5, 1, 1.5, 1.75, 2];
 
       return ranges.map((percentage) => {
         const riskAmount = (capital * percentage) / 100;
-        const shares = Math.floor(riskAmount / riskPerShare);
+        const shares = Math.floor(riskAmount / parseFloat(riskPerShare));
         const amount = shares * entryPrice;
 
         return {
@@ -402,10 +410,10 @@ function tradingApp() {
     // Initialize app
     init() {
       // Set default values
-      this.equity.capital = 200000;
+      this.equity.capital = 100000;
       this.equity.maxRisk = 2;
-      this.equity.buyEntry = 3950;
-      this.equity.buyStopLoss = 3850;
+      this.equity.buyEntry = 100;
+      this.equity.buyStopLoss = 90;
       this.equity.sellEntry = 1500;
       this.equity.sellStopLoss = 1620;
       this.equity.convictionLevel = 1;
@@ -419,77 +427,6 @@ function tradingApp() {
 
       // Initialize F&O calculations
       this.calculateFORisk();
-
-      // Update portfolio summary periodically
-      this.updatePortfolioSummary();
-    },
-
-    // Update portfolio summary
-    updatePortfolioSummary() {
-      // This would typically fetch real data from an API
-      // For demo purposes, we'll use static calculations
-      setInterval(() => {
-        // Simulate minor price fluctuations
-        const fluctuation = (Math.random() - 0.5) * 1000;
-        this.portfolioValue = Math.max(400000, 500000 + fluctuation);
-      }, 30000); // Update every 30 seconds
-    },
-
-    // Export calculations to CSV (bonus feature)
-    exportToCSV(type) {
-      let data = [];
-      let filename = "";
-
-      if (type === "equity") {
-        const calc = this.calculateEquityRisk();
-        const ranges = this.getRiskRanges();
-
-        data = [
-          ["Equity Risk Calculator Results"],
-          ["Capital", this.equity.capital],
-          ["Max Risk %", this.equity.maxRisk],
-          ["Entry Price", this.equity.entryPrice],
-          ["Stop Loss", this.equity.stopLoss],
-          [""],
-          ["Risk per Share", calc.riskPerShare],
-          ["Recommended Shares", calc.recommendedShares],
-          ["Investment Amount", calc.investmentAmount],
-          [""],
-          ["Risk Range", "Risk %", "Shares", "Amount"],
-          ...ranges.map((r) => [r.level, r.percentage, r.shares, r.amount]),
-        ];
-        filename = "equity_risk_calculator.csv";
-      } else if (type === "futures") {
-        const calc = this.calculateFuturesRisk();
-        const ranges = this.getFuturesRiskRanges();
-
-        data = [
-          ["F&O Risk Calculator Results"],
-          ["Capital", this.futures.capital],
-          ["Max Risk %", this.futures.maxRisk],
-          ["Entry Level", this.futures.entryLevel],
-          ["Stop Loss", this.futures.stopLoss],
-          ["Lot Size", this.futures.lotSize],
-          [""],
-          ["Risk per Lot", calc.riskPerLot],
-          ["Recommended Lots", calc.recommendedLots],
-          ["Total Quantity", calc.totalQuantity],
-          [""],
-          ["Conviction Level", "Risk %", "Risk Amount", "Lots"],
-          ...ranges.map((r) => [r.level, r.percentage, r.riskAmount, r.lots]),
-        ];
-        filename = "futures_risk_calculator.csv";
-      }
-
-      // Create and download CSV
-      const csvContent = data.map((row) => row.join(",")).join("\n");
-      const blob = new Blob([csvContent], { type: "text/csv" });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      a.click();
-      window.URL.revokeObjectURL(url);
     },
   };
 }
