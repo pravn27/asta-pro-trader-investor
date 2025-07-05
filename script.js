@@ -13,8 +13,8 @@ function tradingApp() {
       maxRisk: 2,
       buyEntry: 100,
       buyStopLoss: 90,
-      sellEntry: 1500,
-      sellStopLoss: 1620,
+      sellEntry: 100,
+      sellStopLoss: 110,
       convictionLevel: 1,
     },
 
@@ -414,8 +414,8 @@ function tradingApp() {
       this.equity.maxRisk = 2;
       this.equity.buyEntry = 100;
       this.equity.buyStopLoss = 90;
-      this.equity.sellEntry = 1500;
-      this.equity.sellStopLoss = 1620;
+      this.equity.sellEntry = 100;
+      this.equity.sellStopLoss = 110;
       this.equity.convictionLevel = 1;
 
       this.futures.capital = 300000;

@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Equity Risk Calculator - ASTA Pro Trader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"
+      defer
+    ></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link href="../styles.css" rel="stylesheet" />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "trading-dark": "#0F172A",
+              "trading-card": "#1E293B",
+              "trading-accent": "#3B82F6",
+              "trading-success": "#10B981",
+              "trading-danger": "#EF4444",
+              "trading-warning": "#F59E0B",
+              "trading-purple": "#8B5CF6",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-gray-50 text-gray-900" x-data="equityCalculator()">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 flex items-center">
+              <a href="../index.html" class="flex items-center">
+                <i
+                  class="fas fa-chart-line text-2xl text-trading-accent mr-3"
+                ></i>
+                <span class="text-xl font-bold text-gray-900"
+                  >ASTA Pro Trader</span
+                >
+              </a>
+            </div>
+          </div>
+          <div class="hidden md:flex items-center space-x-4">
+            <a
+              href="../index.html"
+              class="nav-button text-gray-600 text-sm font-medium"
+            >
+              <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+            </a>
+            <!-- Risk Calculator Dropdown -->
+            <div class="relative" x-data="{ riskDropdownOpen: false }">
+              <button
+                @click="riskDropdownOpen = !riskDropdownOpen"
+                @click.away="riskDropdownOpen = false"
+                class="nav-button active text-sm font-medium flex items-center"
+              >
+                <i class="fas fa-calculator mr-2"></i>Risk Calculator
+                <i class="fas fa-chevron-down ml-1 text-xs"></i>
+              </button>
+              <div
+                x-show="riskDropdownOpen"
+                x-transition:enter="transition ease-out duration-100"
+                x-transition:enter-start="transform opacity-0 scale-95"
+                x-transition:enter-end="transform opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-75"
+                x-transition:leave-start="transform opacity-100 scale-100"
+                x-transition:leave-end="transform opacity-0 scale-95"
+                class="absolute top-full left-0 mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-50"
+              >
+                <a
+                  href="equity.html"
+                  class="block w-full text-left px-4 py-2 text-sm bg-blue-50 text-blue-600"
+                >
+                  <i class="fas fa-chart-bar mr-2"></i>Equity
+                </a>
+                <a
+                  href="futures.html"
+                  class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                >
+                  <i class="fas fa-coins mr-2"></i>F & O
+                </a>
+              </div>
+            </div>
+            <a
+              href="../index.html#commodities"
+              class="nav-button text-gray-600 text-sm font-medium"
+            >
+              <i class="fas fa-seedling mr-2"></i>Commodities
+            </a>
+          </div>
+          <div class="flex items-center space-x-2">
+            <!-- Mobile Menu Button -->
+            <button
+              @click="mobileMenuOpen = !mobileMenuOpen"
+              class="md:hidden text-gray-600 hover:text-trading-accent ml-2"
+            >
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Mobile Menu -->
+      <div
+        x-show="mobileMenuOpen"
+        x-transition
+        class="md:hidden bg-white border-t shadow-lg"
+      >
+        <div class="px-4 py-4 space-y-3">
+          <a
+            href="../index.html"
+            class="nav-button text-gray-600 w-full text-left text-sm font-medium block"
+          >
+            <i class="fas fa-tachometer-alt mr-3"></i>Dashboard
+          </a>
+          <!-- Risk Calculator Mobile Dropdown -->
+          <div x-data="{ mobileRiskDropdownOpen: true }">
+            <button
+              @click="mobileRiskDropdownOpen = !mobileRiskDropdownOpen"
+              class="nav-button active w-full text-left text-sm font-medium flex items-center justify-between"
+            >
+              <span><i class="fas fa-calculator mr-3"></i>Risk Calculator</span>
+              <i
+                class="fas fa-chevron-down text-xs"
+                :class="mobileRiskDropdownOpen ? 'rotate-180' : ''"
+              ></i>
+            </button>
+            <div
+              x-show="mobileRiskDropdownOpen"
+              x-transition
+              class="ml-4 mt-2 space-y-2"
+            >
+              <a
+                href="equity.html"
+                class="block w-full text-left px-4 py-2 text-sm rounded-md bg-blue-50 text-blue-600"
+              >
+                <i class="fas fa-chart-bar mr-2"></i>Equity
+              </a>
+              <a
+                href="futures.html"
+                class="block w-full text-left px-4 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                <i class="fas fa-coins mr-2"></i>F & O
+              </a>
+            </div>
+          </div>
+          <a
+            href="../index.html#commodities"
+            class="nav-button text-gray-600 w-full text-left text-sm font-medium block"
+          >
+            <i class="fas fa-seedling mr-3"></i>Commodities Guide
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Equity Calculator -->
+      <div class="animate-fade-in space-y-8">
+        <div class="section-header">
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">
+            Equity Risk & Reward Calculator
+          </h1>
+          <p class="text-gray-600">
+            Professional equity position sizing and risk management
+          </p>
+        </div>
+
+        <!-- Section 1: Capital and Risk Setup -->
+        <div class="simple-section">
+          <div class="section-header-simple">
+            <h2 class="section-title-simple">
+              1. Capital & Risk Configuration
+            </h2>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
+            <div class="lg:col-span-2">
+              <label class="form-label">Capital</label>
+              <input
+                type="number"
+                x-model="equity.capital"
+                class="user-input w-full text-center"
+                placeholder="Enter your capital amount"
+              />
+            </div>
+            <div class="lg:col-span-3">
+              <label class="form-label">Max Risk per Invest or Trade (%)</label>
+              <div class="flex items-center space-x-2">
+                <input
+                  type="number"
+                  x-model="equity.maxRisk"
+                  step="0.1"
+                  class="user-input w-full text-center"
+                  placeholder="Enter your max risk per invest or trade"
+                />
+                <span class="text-gray-500 font-medium">%</span>
+              </div>
+            </div>
+            <div class="lg:col-span-3">
+              <label class="form-label">Maximum Risk Amount</label>
+              <div
+                class="form-input bg-gray-50 font-bold text-center text-gray-900"
+                x-text="'₹' + formatNumber((equity.capital * equity.maxRisk) / 100)"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Risk Conviction Levels -->
+          <div class="mt-6">
+            <div class="section-header-simple">
+              <h3 class="section-title-simple">2. Risk Conviction Levels</h3>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="simple-table">
+                <thead>
+                  <tr>
+                    <th>Below Low</th>
+                    <th>Low</th>
+                    <th>Medium</th>
+                    <th>High</th>
+                    <th>Above High</th>
+                    <th class="text-gray-600">Buffer</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="font-semibold text-blue-600">0.25%</td>
+                    <td class="font-semibold text-blue-600">0.50%</td>
+                    <td class="font-semibold text-blue-600">1.00%</td>
+                    <td class="font-semibold text-blue-600">1.50%</td>
+                    <td class="font-semibold text-blue-600">1.75%</td>
+                    <td class="font-semibold text-orange-600">2.00%</td>
+                  </tr>
+                  <tr>
+                    <td
+                      class="font-bold text-gray-900"
+                      x-text="'₹' + formatNumber((equity.capital * 0.25) / 100)"
+                    ></td>
+                    <td
+                      class="font-bold text-gray-900"
+                      x-text="'₹' + formatNumber((equity.capital * 0.5) / 100)"
+                    ></td>
+                    <td
+                      class="font-bold text-gray-900"
+                      x-text="'₹' + formatNumber((equity.capital * 1) / 100)"
+                    ></td>
+                    <td
+                      class="font-bold text-gray-900"
+                      x-text="'₹' + formatNumber((equity.capital * 1.5) / 100)"
+                    ></td>
+                    <td
+                      class="font-bold text-gray-900"
+                      x-text="'₹' + formatNumber((equity.capital * 1.75) / 100)"
+                    ></td>
+                    <td
+                      class="font-bold text-gray-900"
+                      x-text="'₹' + formatNumber((equity.capital * 2) / 100)"
+                    ></td>
+                  </tr>
+                  <tr>
+                    <td
+                      colspan="6"
+                      class="text-xs text-gray-500 text-center pt-2 italic"
+                    >
+                      0.25% buffer included for risk management
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Position Analysis -->
+        <div class="simple-section">
+          <div class="section-header-simple">
+            <h3 class="section-title-simple">3. Position Analysis</h3>
+          </div>
+
+          <!-- Position Tabs -->
+          <div class="mb-6" x-data="{ activePositionTab: 'buy' }">
+            <div class="border-b border-gray-200 mb-6">
+              <nav class="flex space-x-8">
+                <button
+                  @click="activePositionTab = 'buy'"
+                  :class="activePositionTab === 'buy' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
+                  class="py-2 px-1 border-b-2 font-medium text-sm"
+                >
+                  Buy / Long
+                </button>
+                <button
+                  @click="activePositionTab = 'sell'"
+                  :class="activePositionTab === 'sell' ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
+                  class="py-2 px-1 border-b-2 font-medium text-sm"
+                >
+                  Sell / Short
+                </button>
+              </nav>
+            </div>
+
+            <!-- Buy/Long Tab Content -->
+            <div x-show="activePositionTab === 'buy'" class="animate-fade-in">
+              <!-- Position Calculator -->
+              <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+                <h4
+                  class="text-lg font-semibold text-blue-600 mb-4 border-b border-gray-100 pb-2"
+                >
+                  📈 Buy / Long Position Calculator
+                </h4>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <!-- Input Section -->
+                  <div>
+                    <h5 class="font-medium text-gray-700 mb-3">
+                      Position Details per Share / Qty
+                    </h5>
+                    <div class="space-y-3">
+                      <div class="flex items-center justify-between">
+                        <label class="text-sm font-bold text-gray-700 w-20"
+                          >Entry</label
+                        >
+                        <input
+                          type="number"
+                          x-model="equity.buyEntry"
+                          step="0.01"
+                          class="user-input w-32 text-center"
+                          placeholder="100"
+                        />
+                      </div>
+                      <div class="flex items-center justify-between">
+                        <label class="text-sm font-bold text-gray-700 w-20"
+                          >Stop Loss</label
+                        >
+                        <input
+                          type="number"
+                          x-model="equity.buyStopLoss"
+                          step="0.01"
+                          class="user-input w-32 text-center"
+                          placeholder="90"
+                        />
+                      </div>
+                      <div
+                        class="flex items-center justify-between pt-2 border-t border-gray-100"
+                      >
+                        <label class="text-sm font-bold text-gray-700 w-20"
+                          >Risk</label
+                        >
+                        <div
+                          class="w-32 text-center font-bold text-gray-900 py-2 px-3 bg-gray-50 rounded"
+                          x-text="Math.abs((equity.buyEntry || 0) - (equity.buyStopLoss || 0))"
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Results Section -->
+                  <div>
+                    <h5 class="font-medium text-gray-700 mb-3">Results</h5>
+                    <div class="space-y-2">
+                      <div
+                        class="flex justify-between py-2 border-b border-gray-100"
+                      >
+                        <span class="text-sm text-gray-600"
+                          >Max number of shares allowed to buy based on
+                          RISK</span
+                        >
+                        <span
+                          class="font-semibold"
+                          x-text="calculateEquityBuyRisk().maxSharesRisk"
+                        ></span>
+                      </div>
+
+                      <div
+                        class="flex justify-between py-2 border-b border-gray-100"
+                      >
+                        <span class="text-sm text-gray-600"
+                          >Max number of shares allowed to buy based on
+                          ENTRY</span
+                        >
+                        <span
+                          class="font-semibold"
+                          x-text="calculateEquityBuyRisk().maxSharesEntry"
+                        ></span>
+                      </div>
+
+                      <div
+                        class="flex justify-between py-2 border-b border-gray-100"
+                      >
+                        <span class="text-sm text-gray-600">Recommended</span>
+                        <span
+                          class="font-semibold text-blue-600"
+                          x-text="calculateEquityBuyRisk().recommendedLevel"
+                        ></span>
+                      </div>
+
+                      <div
+                        class="flex justify-between py-3 bg-blue-50 px-3 rounded mt-3"
+                      >
+                        <span class="font-medium text-blue-800"
+                          >Final Max Shares</span
+                        >
+                        <span
+                          class="font-bold text-lg text-blue-900"
+                          x-text="calculateEquityBuyRisk().finalMaxShares"
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Risk Ranges Table -->
+                <div
+                  class="bg-white border border-gray-200 rounded-lg p-6 mt-6"
+                >
+                  <h4
+                    class="text-lg font-semibold text-blue-600 mb-4 border-b border-gray-100 pb-2"
+                  >
+                    📊 Buy/Long Risk Analysis
+                  </h4>
+                  <div class="overflow-x-auto">
+                    <table class="simple-table">
+                      <thead>
+                        <tr>
+                          <th>Risk Level</th>
+                          <th>0.25%</th>
+                          <th>0.50%</th>
+                          <th>1.00%</th>
+                          <th>1.50%</th>
+                          <th>1.75%</th>
+                          <th>2.00%</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="font-semibold text-gray-700">Shares</td>
+                          <template
+                            x-for="range in getBuyRiskRanges()"
+                            :key="range.percentage"
+                          >
+                            <td
+                              class="font-bold text-blue-600"
+                              x-text="range.shares"
+                            ></td>
+                          </template>
+                        </tr>
+                        <tr>
+                          <td class="font-semibold text-gray-700">
+                            Investment
+                          </td>
+                          <template
+                            x-for="range in getBuyRiskRanges()"
+                            :key="range.percentage + '_amount'"
+                          >
+                            <td
+                              class="font-semibold text-gray-900"
+                              x-text="'₹' + formatNumber(range.amount)"
+                            ></td>
+                          </template>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sell/Short Tab Content -->
+            <div x-show="activePositionTab === 'sell'" class="animate-fade-in">
+              <!-- Position Calculator -->
+              <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+                <h4
+                  class="text-lg font-semibold text-red-600 mb-4 border-b border-gray-100 pb-2"
+                >
+                  📉 Sell / Short Position Calculator
+                </h4>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <!-- Input Section -->
+                  <div>
+                    <h5 class="font-medium text-gray-700 mb-3">
+                      Position Details per Share / Qty
+                    </h5>
+                    <div class="space-y-3">
+                      <div class="flex items-center justify-between">
+                        <label class="text-sm font-bold text-gray-700 w-20"
+                          >Entry</label
+                        >
+                        <input
+                          type="number"
+                          x-model="equity.sellEntry"
+                          step="0.01"
+                          class="user-input w-32 text-center"
+                          placeholder="100"
+                        />
+                      </div>
+                      <div class="flex items-center justify-between">
+                        <label class="text-sm font-bold text-gray-700 w-20"
+                          >Stop Loss</label
+                        >
+                        <input
+                          type="number"
+                          x-model="equity.sellStopLoss"
+                          step="0.01"
+                          class="user-input w-32 text-center"
+                          placeholder="110"
+                        />
+                      </div>
+                      <div
+                        class="flex items-center justify-between pt-2 border-t border-gray-100"
+                      >
+                        <label class="text-sm font-bold text-gray-700 w-20"
+                          >Risk</label
+                        >
+                        <div
+                          class="w-32 text-center font-bold text-gray-900 py-2 px-3 bg-gray-50 rounded"
+                          x-text="Math.abs((equity.sellEntry || 0) - (equity.sellStopLoss || 0))"
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Results Section -->
+                  <div>
+                    <h5 class="font-medium text-gray-700 mb-3">Results</h5>
+                    <div class="space-y-2">
+                      <div
+                        class="flex justify-between py-2 border-b border-gray-100"
+                      >
+                        <span class="text-sm text-gray-600"
+                          >Max number of shares allowed to buy based on
+                          RISK</span
+                        >
+                        <span
+                          class="font-semibold"
+                          x-text="calculateEquitySellRisk().maxSharesRisk"
+                        ></span>
+                      </div>
+
+                      <div
+                        class="flex justify-between py-2 border-b border-gray-100"
+                      >
+                        <span class="text-sm text-gray-600"
+                          >Max number of shares allowed to buy based on
+                          ENTRY</span
+                        >
+                        <span
+                          class="font-semibold"
+                          x-text="calculateEquitySellRisk().maxSharesEntry"
+                        ></span>
+                      </div>
+
+                      <div
+                        class="flex justify-between py-2 border-b border-gray-100"
+                      >
+                        <span class="text-sm text-gray-600">Recommended</span>
+                        <span
+                          class="font-semibold text-red-600"
+                          x-text="calculateEquitySellRisk().recommendedLevel"
+                        ></span>
+                      </div>
+
+                      <div
+                        class="flex justify-between py-3 bg-red-50 px-3 rounded mt-3"
+                      >
+                        <span class="font-medium text-red-800"
+                          >Final Max Shares</span
+                        >
+                        <span
+                          class="font-bold text-lg text-red-900"
+                          x-text="calculateEquitySellRisk().finalMaxShares"
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Risk Ranges Table -->
+                <div
+                  class="bg-white border border-gray-200 rounded-lg p-6 mt-6"
+                >
+                  <h4
+                    class="text-lg font-semibold text-red-600 mb-4 border-b border-gray-100 pb-2"
+                  >
+                    📊 Sell/Short Risk Analysis
+                  </h4>
+                  <div class="overflow-x-auto">
+                    <table class="simple-table">
+                      <thead>
+                        <tr>
+                          <th>Risk Level</th>
+                          <th>0.25%</th>
+                          <th>0.50%</th>
+                          <th>1.00%</th>
+                          <th>1.50%</th>
+                          <th>1.75%</th>
+                          <th>2.00%</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="font-semibold text-gray-700">Shares</td>
+                          <template
+                            x-for="range in getSellRiskRanges()"
+                            :key="range.percentage"
+                          >
+                            <td
+                              class="font-bold text-red-600"
+                              x-text="range.shares"
+                            ></td>
+                          </template>
+                        </tr>
+                        <tr>
+                          <td class="font-semibold text-gray-700">
+                            Investment
+                          </td>
+                          <template
+                            x-for="range in getSellRiskRanges()"
+                            :key="range.percentage + '_amount'"
+                          >
+                            <td
+                              class="font-semibold text-gray-900"
+                              x-text="'₹' + formatNumber(range.amount)"
+                            ></td>
+                          </template>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8 mt-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <div class="flex items-center justify-center mb-4">
+            <i class="fas fa-chart-line text-2xl text-blue-400 mr-3"></i>
+            <span class="text-xl font-bold">ASTA Pro Trader & Investor</span>
+          </div>
+          <p class="text-gray-400">
+            Professional trading platform for risk management and position
+            sizing
+          </p>
+          <div class="mt-4 text-sm text-gray-500">
+            <p>&copy; 2024 ASTA Pro Trader. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      function equityCalculator() {
+        return {
+          mobileMenuOpen: false,
+
+          // Equity calculator data
+          equity: {
+            capital: 100000,
+            maxRisk: 2,
+            buyEntry: 100,
+            buyStopLoss: 90,
+            sellEntry: 100,
+            sellStopLoss: 110,
+          },
+
+          // Utility methods
+          formatNumber(num) {
+            if (!num) return "0";
+            return Math.round(num).toLocaleString("en-IN");
+          },
+
+          // Calculate Buy/Long Risk
+          calculateEquityBuyRisk() {
+            const capital = parseFloat(this.equity.capital) || 0;
+            const maxRisk = parseFloat(this.equity.maxRisk) || 2;
+            const entry = parseFloat(this.equity.buyEntry) || 0;
+            const stopLoss = parseFloat(this.equity.buyStopLoss) || 0;
+
+            if (!capital || !entry || !stopLoss) {
+              return {
+                maxSharesRisk: 0,
+                maxSharesEntry: 0,
+                recommendedLevel: "Enter values",
+                finalMaxShares: 0,
+              };
+            }
+
+            const riskPerShare = Math.abs(entry - stopLoss);
+            const maxRiskAmount = (capital * maxRisk) / 100;
+            const maxSharesRisk = Math.floor(maxRiskAmount / riskPerShare);
+            const maxSharesEntry = Math.floor(capital / entry);
+            const finalMaxShares = Math.min(maxSharesRisk, maxSharesEntry);
+
+            return {
+              maxSharesRisk: maxSharesRisk,
+              maxSharesEntry: maxSharesEntry,
+              recommendedLevel: "Risk-based",
+              finalMaxShares: finalMaxShares,
+            };
+          },
+
+          // Calculate Sell/Short Risk
+          calculateEquitySellRisk() {
+            const capital = parseFloat(this.equity.capital) || 0;
+            const maxRisk = parseFloat(this.equity.maxRisk) || 2;
+            const entry = parseFloat(this.equity.sellEntry) || 0;
+            const stopLoss = parseFloat(this.equity.sellStopLoss) || 0;
+
+            if (!capital || !entry || !stopLoss) {
+              return {
+                maxSharesRisk: 0,
+                maxSharesEntry: 0,
+                recommendedLevel: "Enter values",
+                finalMaxShares: 0,
+              };
+            }
+
+            const riskPerShare = Math.abs(entry - stopLoss);
+            const maxRiskAmount = (capital * maxRisk) / 100;
+            const maxSharesRisk = Math.floor(maxRiskAmount / riskPerShare);
+            const maxSharesEntry = Math.floor(capital / entry);
+            const finalMaxShares = Math.min(maxSharesRisk, maxSharesEntry);
+
+            return {
+              maxSharesRisk: maxSharesRisk,
+              maxSharesEntry: maxSharesEntry,
+              recommendedLevel: "Risk-based",
+              finalMaxShares: finalMaxShares,
+            };
+          },
+
+          // Get Buy Risk Ranges
+          getBuyRiskRanges() {
+            const capital = parseFloat(this.equity.capital) || 0;
+            const entry = parseFloat(this.equity.buyEntry) || 0;
+            const stopLoss = parseFloat(this.equity.buyStopLoss) || 0;
+
+            if (!capital || !entry || !stopLoss) return [];
+
+            const riskPerShare = Math.abs(entry - stopLoss);
+            const percentages = [0.25, 0.5, 1, 1.5, 1.75, 2];
+
+            return percentages.map((percentage) => {
+              const riskAmount = (capital * percentage) / 100;
+              const shares = Math.floor(riskAmount / riskPerShare);
+              const amount = shares * entry;
+
+              return {
+                percentage: percentage,
+                shares: shares,
+                amount: amount,
+              };
+            });
+          },
+
+          // Get Sell Risk Ranges
+          getSellRiskRanges() {
+            const capital = parseFloat(this.equity.capital) || 0;
+            const entry = parseFloat(this.equity.sellEntry) || 0;
+            const stopLoss = parseFloat(this.equity.sellStopLoss) || 0;
+
+            if (!capital || !entry || !stopLoss) return [];
+
+            const riskPerShare = Math.abs(entry - stopLoss);
+            const percentages = [0.25, 0.5, 1, 1.5, 1.75, 2];
+
+            return percentages.map((percentage) => {
+              const riskAmount = (capital * percentage) / 100;
+              const shares = Math.floor(riskAmount / riskPerShare);
+              const amount = shares * entry;
+
+              return {
+                percentage: percentage,
+                shares: shares,
+                amount: amount,
+              };
+            });
+          },
+        };
+      }
+    </script>
+  </body>
+</html>
