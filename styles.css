@@ -70,6 +70,15 @@
   border-radius: 8px;
 }
 
+/* Smooth Chevron Rotation */
+.fa-chevron-down {
+  transition: transform 0.3s ease;
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
 .nav-button:hover {
   background-color: rgba(59, 130, 246, 0.1);
   transform: translateY(-1px);

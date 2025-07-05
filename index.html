@@ -55,20 +55,43 @@
             >
               <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
             </button>
-            <button
-              @click="activeTab = 'equity'"
-              :class="activeTab === 'equity' ? 'nav-button active' : 'nav-button text-gray-600'"
-              class="text-sm font-medium"
-            >
-              <i class="fas fa-chart-bar mr-2"></i>Equity
-            </button>
-            <button
-              @click="activeTab = 'futures'"
-              :class="activeTab === 'futures' ? 'nav-button active' : 'nav-button text-gray-600'"
-              class="text-sm font-medium"
-            >
-              <i class="fas fa-coins mr-2"></i>F&O
-            </button>
+            <!-- Risk Calculator Dropdown -->
+            <div class="relative" x-data="{ riskDropdownOpen: false }">
+              <button
+                @click="riskDropdownOpen = !riskDropdownOpen"
+                @click.away="riskDropdownOpen = false"
+                :class="(activeTab === 'equity' || activeTab === 'futures') ? 'nav-button active' : 'nav-button text-gray-600'"
+                class="text-sm font-medium flex items-center"
+              >
+                <i class="fas fa-calculator mr-2"></i>Risk Calculator
+                <i class="fas fa-chevron-down ml-1 text-xs"></i>
+              </button>
+              <div
+                x-show="riskDropdownOpen"
+                x-transition:enter="transition ease-out duration-100"
+                x-transition:enter-start="transform opacity-0 scale-95"
+                x-transition:enter-end="transform opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-75"
+                x-transition:leave-start="transform opacity-100 scale-100"
+                x-transition:leave-end="transform opacity-0 scale-95"
+                class="absolute top-full left-0 mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-50"
+              >
+                <button
+                  @click="activeTab = 'equity'; riskDropdownOpen = false"
+                  :class="activeTab === 'equity' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50'"
+                  class="block w-full text-left px-4 py-2 text-sm"
+                >
+                  <i class="fas fa-chart-bar mr-2"></i>Equity
+                </button>
+                <button
+                  @click="activeTab = 'futures'; riskDropdownOpen = false"
+                  :class="activeTab === 'futures' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50'"
+                  class="block w-full text-left px-4 py-2 text-sm"
+                >
+                  <i class="fas fa-coins mr-2"></i>F & O
+                </button>
+              </div>
+            </div>
             <button
               @click="activeTab = 'commodities'"
               :class="activeTab === 'commodities' ? 'nav-button active' : 'nav-button text-gray-600'"
@@ -102,20 +125,40 @@
           >
             <i class="fas fa-tachometer-alt mr-3"></i>Dashboard
           </button>
-          <button
-            @click="activeTab = 'equity'; mobileMenuOpen = false"
-            :class="activeTab === 'equity' ? 'nav-button active w-full' : 'nav-button text-gray-600 w-full'"
-            class="text-left text-sm font-medium"
-          >
-            <i class="fas fa-chart-bar mr-3"></i>Equity Calculator
-          </button>
-          <button
-            @click="activeTab = 'futures'; mobileMenuOpen = false"
-            :class="activeTab === 'futures' ? 'nav-button active w-full' : 'nav-button text-gray-600 w-full'"
-            class="text-left text-sm font-medium"
-          >
-            <i class="fas fa-coins mr-3"></i>F&O Calculator
-          </button>
+          <!-- Risk Calculator Mobile Dropdown -->
+          <div x-data="{ mobileRiskDropdownOpen: false }">
+            <button
+              @click="mobileRiskDropdownOpen = !mobileRiskDropdownOpen"
+              :class="(activeTab === 'equity' || activeTab === 'futures') ? 'nav-button active w-full' : 'nav-button text-gray-600 w-full'"
+              class="text-left text-sm font-medium flex items-center justify-between"
+            >
+              <span><i class="fas fa-calculator mr-3"></i>Risk Calculator</span>
+              <i
+                class="fas fa-chevron-down text-xs"
+                :class="mobileRiskDropdownOpen ? 'rotate-180' : ''"
+              ></i>
+            </button>
+            <div
+              x-show="mobileRiskDropdownOpen"
+              x-transition
+              class="ml-4 mt-2 space-y-2"
+            >
+              <button
+                @click="activeTab = 'equity'; mobileMenuOpen = false; mobileRiskDropdownOpen = false"
+                :class="activeTab === 'equity' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50'"
+                class="block w-full text-left px-4 py-2 text-sm rounded-md"
+              >
+                <i class="fas fa-chart-bar mr-2"></i>Equity
+              </button>
+              <button
+                @click="activeTab = 'futures'; mobileMenuOpen = false; mobileRiskDropdownOpen = false"
+                :class="activeTab === 'futures' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50'"
+                class="block w-full text-left px-4 py-2 text-sm rounded-md"
+              >
+                <i class="fas fa-coins mr-2"></i>F & O
+              </button>
+            </div>
+          </div>
           <button
             @click="activeTab = 'commodities'; mobileMenuOpen = false"
             :class="activeTab === 'commodities' ? 'nav-button active w-full' : 'nav-button text-gray-600 w-full'"
