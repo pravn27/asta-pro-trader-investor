@@ -59,8 +59,8 @@
             <!-- Risk Calculator Dropdown -->
             <div class="relative" x-data="{ riskDropdownOpen: false }">
               <button
-                @click="riskDropdownOpen = !riskDropdownOpen"
-                @click.away="riskDropdownOpen = false"
+                @mouseenter="riskDropdownOpen = true"
+                @mouseleave="riskDropdownOpen = false"
                 class="nav-button active text-sm font-medium flex items-center"
               >
                 <i class="fas fa-calculator mr-2"></i>Risk Calculator
@@ -68,6 +68,8 @@
               </button>
               <div
                 x-show="riskDropdownOpen"
+                @mouseenter="riskDropdownOpen = true"
+                @mouseleave="riskDropdownOpen = false"
                 x-transition:enter="transition ease-out duration-100"
                 x-transition:enter-start="transform opacity-0 scale-95"
                 x-transition:enter-end="transform opacity-100 scale-100"
